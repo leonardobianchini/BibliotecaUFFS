@@ -2,16 +2,31 @@ package com.example.bianchini.bibliotecauffs;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.*;
+import android.widget.*;
 
 
-public class actCadastro extends ActionBarActivity {
+public class actCadastro extends ActionBarActivity implements View.OnClickListener {
+
+    private Button btCancela;
+    private Button btAdiciona;
+    private EditText edNome;
+    private EditText edAutor;
+    private EditText edData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_cadastro);
+
+        edNome = (EditText)findViewById(R.id.edNome);
+        edAutor = (EditText)findViewById(R.id.edAutor);
+        edData = (EditText)findViewById(R.id.edData);
+        btCancela = (Button)findViewById(R.id.btCancela);
+        btAdiciona = (Button)findViewById(R.id.btAdiciona);
+
+        btAdiciona.setOnClickListener(this);
+        btCancela.setOnClickListener(this);
     }
 
     @Override
@@ -34,5 +49,9 @@ public class actCadastro extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClick(View v){
+        finish();
     }
 }
