@@ -1,4 +1,4 @@
-package com.example.bianchini.bibliotecauffs;
+package com.example.bianchini.bibliotecauffs.database;
 
 /**
  * Created by Bianchini on 12/06/2015.
@@ -10,7 +10,7 @@ import android.database.sqlite.*;
 public class DataBase extends SQLiteOpenHelper {
 
     public DataBase (Context context){
-        super(context, "LIVROS", null, 1);
+        super(context, "LIVRO", null, 1);
     }
 
     @Override
