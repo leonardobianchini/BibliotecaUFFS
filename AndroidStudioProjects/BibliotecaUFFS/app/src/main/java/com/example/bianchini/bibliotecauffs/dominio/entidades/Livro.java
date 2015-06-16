@@ -12,9 +12,9 @@ public class Livro {
     private String autor;
     private Date data;
 
-    //public livro(){
+    public Livro(){
 
-//    }
+    }
 
     public long getId() {
         return id;
@@ -46,5 +46,10 @@ public class Livro {
 
     public void setData(Date data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString(){
+        return nome + " " + data;
     }
 }

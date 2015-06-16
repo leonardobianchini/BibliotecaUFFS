@@ -8,6 +8,8 @@ import android.widget.*;
 
 import com.example.bianchini.bibliotecauffs.dominio.entidades.Livro;
 
+import java.util.Date;
+
 /**
  * Created by Bianchini on 12/06/2015.
  */
@@ -37,16 +39,20 @@ public class RepositorioLivro {
     }
 
 
-    public ArrayAdapter<String> buscaContato(Context context){
-        ArrayAdapter<String> adpLivros = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+    public ArrayAdapter<Livro> buscaLivro(Context context){
+        ArrayAdapter<Livro> adpLivros = new ArrayAdapter<Livro>(context, android.R.layout.simple_list_item_1);
 
         Cursor cursor = conn.query("LIVRO", null, null, null, null, null, null);
 
         if (cursor.getCount() > 0){
             cursor.moveToFirst();
             do {
-                String nome = cursor.getString(1);
-                adpLivros.add(nome);
+                Livro livro = new Livro();
+                livro.setNome(cursor.getString(1));
+                livro.setAutor(cursor.getString(2));
+                livro.setData(new Date(cursor.getLong(3)));
+
+                adpLivros.add(livro);
             } while (cursor.moveToNext());
         }
         return adpLivros;
