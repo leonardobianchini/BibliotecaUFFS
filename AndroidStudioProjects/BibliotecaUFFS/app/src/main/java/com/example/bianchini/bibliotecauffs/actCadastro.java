@@ -2,10 +2,12 @@ package com.example.bianchini.bibliotecauffs;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
@@ -18,10 +20,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class actCadastro extends ActionBarActivity implements View.OnClickListener {
+public class actCadastro extends ActionBarActivity{
 
     private Button btCancela;
     private Button btAdiciona;
+    private Button btExcluir;
     private EditText edNome;
     private EditText edAutor;
     private EditText edData;
@@ -30,27 +33,56 @@ public class actCadastro extends ActionBarActivity implements View.OnClickListen
     private SQLiteDatabase conn ;
     private RepositorioLivro repositorioLivro;
     private Livro livro;
+    private Date data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_cadastro);
 
-        edNome = (EditText)findViewById(R.id.edNome);
-        edAutor = (EditText)findViewById(R.id.edAutor);
-        edData = (EditText)findViewById(R.id.edData);
-        btCancela = (Button)findViewById(R.id.btCancela);
-        btAdiciona = (Button)findViewById(R.id.btAdiciona);
+        edNome = (EditText) findViewById(R.id.edNome);
+        edAutor = (EditText) findViewById(R.id.edAutor);
+        edData = (EditText) findViewById(R.id.edData);
+        btCancela = (Button) findViewById(R.id.btCancela);
+        btAdiciona = (Button) findViewById(R.id.btAdiciona);
+        btExcluir = (Button) findViewById(R.id.btExcluir);
 
-        btAdiciona.setOnClickListener(this);
-        btCancela.setOnClickListener(this);
+        btCancela.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        btAdiciona.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                salvar();
+                finish();
+            }
+        });
+
+        btExcluir.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         exibeDataListener listener = new exibeDataListener();
 
-        edData.setOnClickListener( listener );
+        edData.setOnClickListener(listener);
         edData.setOnFocusChangeListener(listener);
 
-        livro = new Livro();
+        Bundle bundle;
+        bundle = getIntent().getExtras();
+
+        if ((bundle != null) && (bundle.containsKey("LIVRO"))) {
+            livro = (Livro)bundle.getSerializable("LIVRO");
+            preencheDados();
+        } else {
+            livro = new Livro();
+        }
 
         try {
             dataBase = new DataBase(this);
@@ -88,25 +120,53 @@ public class actCadastro extends ActionBarActivity implements View.OnClickListen
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClick(View v){
+    /*public void onClick(View v){
         if (v == btCancela){
             finish();
-        } else {
+        } else if (v == btAdiciona) {
             if (livro == null){
                 inserir();
+                Intent result = new Intent();
+                result.putExtra("nomeLivro", livro.getNome());
+                this.setResult(RESULT_OK, result);
+            }else {
+                Log.wtf("actCadastro", "LIVRO NAO E NULO");
             }
             finish();
         }
 
+    }*/
+    private void preencheDados(){
+        edNome.setText(livro.getNome());
+        edAutor.setText(livro.getAutor());
+
+        DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        String dt = format.format(livro.getData());
+        edData.setText(dt);
     }
 
-    private void inserir() {
-        try {
 
+    private void salvar() {
+        try {
+            //livro = new Livro();
             livro.setNome(edNome.getText().toString());
             livro.setAutor(edAutor.getText().toString());
+            livro.setData(data);
+            //repositorioLivro.inserir(livro);
+            if (livro.getId() != 0) {
+                repositorioLivro.alterar(livro);
+                Intent result = new Intent();
+                result.putExtra("nomeLivro", livro.getNome());
+                setResult(RESULT_OK, result);
+                Log.wtf("actCadastro", "LIVRO NAO E NULO");
+            }
+            if (livro.getId() == 0) {
+                repositorioLivro.inserir(livro);
+                Intent result = new Intent();
+                result.putExtra("nomeLivro", livro.getNome());
+                setResult(RESULT_OK, result);
+            }
 
-            repositorioLivro.inserir(livro);
         } catch (Exception ex){
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setMessage("Erro ao inserir " + ex.getMessage());
@@ -151,7 +211,7 @@ public class actCadastro extends ActionBarActivity implements View.OnClickListen
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, monthOfYear, dayOfMonth);
 
-            Date data = calendar.getTime();
+            data = calendar.getTime();
 
             DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
@@ -159,7 +219,7 @@ public class actCadastro extends ActionBarActivity implements View.OnClickListen
 
             edData.setText(dt);
 
-            livro.setData(data);
+            //livro.setData(data);
         }
     }
 }
