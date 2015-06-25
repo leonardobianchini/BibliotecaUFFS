@@ -1,11 +1,12 @@
 package com.example.bianchini.bibliotecauffs.dominio.entidades;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Bianchini on 13/06/2015.
  */
-public class Livro {
+public class Livro implements Serializable {
 
     private long id;
     private String nome;
@@ -13,7 +14,7 @@ public class Livro {
     private Date data;
 
     public Livro(){
-
+        id = 0;
     }
 
     public long getId() {
@@ -50,6 +51,6 @@ public class Livro {
 
     @Override
     public String toString(){
-        return nome + " " + data;
+        return nome + " " + autor;
     }
 }

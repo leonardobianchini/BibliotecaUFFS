@@ -21,12 +21,10 @@ public class RepositorioLivro {
     }
 
     public void inserir(Livro livro){
-
         ContentValues values = new ContentValues();
         values.put("NOME", livro.getNome());
         values.put("AUTOR", livro.getAutor());
         values.put("DATA", livro.getData().getTime());
-
         conn.insertOrThrow("LIVRO", null, values);
     }
 
@@ -48,6 +46,7 @@ public class RepositorioLivro {
             cursor.moveToFirst();
             do {
                 Livro livro = new Livro();
+                livro.setId(cursor.getLong(0));
                 livro.setNome(cursor.getString(1));
                 livro.setAutor(cursor.getString(2));
                 livro.setData(new Date(cursor.getLong(3)));

@@ -14,7 +14,9 @@ import com.example.bianchini.bibliotecauffs.database.DataBase;
 import com.example.bianchini.bibliotecauffs.dominio.RepositorioLivro;
 import com.example.bianchini.bibliotecauffs.dominio.entidades.Livro;
 
-public class actMain extends ActionBarActivity implements View.OnClickListener{
+import java.io.Serializable;
+
+public class actMain extends ActionBarActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
 
 
     private Button btAdd;
@@ -36,6 +38,7 @@ public class actMain extends ActionBarActivity implements View.OnClickListener{
 
         btInfo.setOnClickListener(this);
         btAdd.setOnClickListener(this);
+        lstLivros.setOnItemClickListener(this);
 
         try {
             dataBase = new DataBase(this);
@@ -100,5 +103,17 @@ public class actMain extends ActionBarActivity implements View.OnClickListener{
             Log.wtf("actMain", "FODEU TUDO");
 
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Livro livro = adpLivros.getItem(position);
+
+        Intent it = new Intent(this, actCadastro.class);
+
+        it.putExtra("LIVRO", livro);
+
+        startActivityForResult(it, 0);
     }
 }

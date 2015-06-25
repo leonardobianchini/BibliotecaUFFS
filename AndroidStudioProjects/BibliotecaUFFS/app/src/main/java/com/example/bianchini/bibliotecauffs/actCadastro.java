@@ -57,7 +57,14 @@ public class actCadastro extends ActionBarActivity{
         btAdiciona.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                salvar();
+                if (livro.getId() == 0) {
+                    salvar();
+                    Intent result = new Intent();
+                    result.putExtra("nomeLivro", livro.getNome());
+                    setResult(RESULT_OK, result);
+                } else {
+                    Log.wtf("actCadastro", "LIVRO NAO E NULO");
+                }
                 finish();
             }
         });
@@ -152,20 +159,7 @@ public class actCadastro extends ActionBarActivity{
             livro.setNome(edNome.getText().toString());
             livro.setAutor(edAutor.getText().toString());
             livro.setData(data);
-            //repositorioLivro.inserir(livro);
-            if (livro.getId() != 0) {
-                repositorioLivro.alterar(livro);
-                Intent result = new Intent();
-                result.putExtra("nomeLivro", livro.getNome());
-                setResult(RESULT_OK, result);
-                Log.wtf("actCadastro", "LIVRO NAO E NULO");
-            }
-            if (livro.getId() == 0) {
-                repositorioLivro.inserir(livro);
-                Intent result = new Intent();
-                result.putExtra("nomeLivro", livro.getNome());
-                setResult(RESULT_OK, result);
-            }
+            repositorioLivro.inserir(livro);
 
         } catch (Exception ex){
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
@@ -174,6 +168,7 @@ public class actCadastro extends ActionBarActivity{
             dlg.show();
         }
     }
+    
 
     private void exibeData(){
 
